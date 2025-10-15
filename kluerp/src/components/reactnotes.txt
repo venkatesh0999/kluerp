@@ -1,0 +1,110 @@
+props stands for properties ,used to share the information between the 
+
+parent data is suitable and child data is immutable.
+
+props
+
+import React from 'react'
+
+const Child2 = (props) => {
+  return (
+    <div>
+      <h1>{props.key1}</h1>
+          <h2>{props.key2}</h2>
+    </div>
+  )
+}
+
+export default Child2
+
+BOOT STRAP IN React
+
+----------------------------------------------------------------------
+A platform used to get the Readymade front end code
+
+How to work with the bootstrap
+
+we have 2 ways to install bootstrap into the project
+
+1.npm install bootstrap
+
+2.import the CDNSof css and js into the index.html
+------------------------------------------------------------------------------
+
+What is routing in the react
+
+Navigate from one component to another componentwithout refreshing the page is called routing
+
+To implement routing in the react we are using a command is      npm install react-router-dom
+
+In react routingwe have various predefined components
+
+1.<router> <router/>
+
+is used to create a router
+
+2.<routes> <routes/>
+
+is used to encapsulate the router
+
+3.<BrowserRouter> <BrowserRouter/>
+
+is used to encapsulate the routes component.
+
+4.<Link>  <Link/>
+
+is used to a create a link to the component.
+
+
+Every route is having two predefined functions 
+
+1.Path
+2.Element.
+
+BrowserRouter component is must used in main.jsx 
+
+1.install react router DOM 
+
+npm install react-router-dom 
+
+or
+
+npm install react -router-dom@6
+
+Definition: Navigating from one component to another componentis routing
+
+predefined components used to perform the Routing in react
+
+-----------------------------------------------------------------------------------------------------
+<Route> </Route>
+
+immutable RouterKeys used to create a route to the component 
+
+ROuter is having 2 functions
+
+
+1.path: /homepage and /aboutpage
+
+2. Element: <Homepage></Homepage>
+
+<Routes> </Routes> :Encapsulating the group of Route.:
+
+<Link> </Link>:To create a link to the component
+
+<a href="index.html">Home</a>
+
+
+<BrowserRouter> </BrowserRouter>
+
+used to encapsulate the main component.
+
+<Outlet> </Outlet>
+
+1.Create 3 components
+
+Kids
+Fashion
+Electronics
+
+after that create another component 
+

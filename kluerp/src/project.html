@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Resource Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            color: #005f73;
+        }
+        
+        /* Login Container Styling */
+        #login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #003440;
+        }
+
+        .login-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-box h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .login-box h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        /* Header */
+        header {
+            background: #003440;
+            color: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        #auth-container span {
+            margin-right: 15px;
+        }
+
+        /* Buttons */
+        button {
+            background-color: #00a896;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #007a6e;
+        }
+        
+        a { text-decoration: none; }
+
+        #logout-btn {
+            background-color: #d9534f;
+        }
+
+        #logout-btn:hover {
+            background-color: #c9302c;
+        }
+
+        /* Main Content & Sections */
+        main {
+            padding-top: 20px;
+        }
+
+        section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Search Bar */
+        #search-bar {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        /* Resource Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .resource-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-card h3 {
+            margin-top: 0;
+            color: #005f73;
+        }
+
+        .resource-card p {
+            flex-grow: 1;
+        }
+
+        .resource-card .type-badge {
+            align-self: flex-start;
+            background: #e9ecef;
+            color: #495057;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .card-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .feedback-display {
+            margin-top: 15px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border-left: 3px solid #00a896;
+        }
+
+        .feedback-display strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .feedback-display p { margin: 0 0 5px 0; }
+
+        /* Admin Panel */
+        #admin-panel {
+            background-color: #e6f7ff;
+            border: 1px solid #91d5ff;
+        }
+
+        #user-management-table table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        #user-management-table th, #user-management-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #user-management-table th { background-color: #f2f2f2; }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+            animation: slideIn 0.4s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        /* Form Styling */
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="number"],
+        form select,
+        form textarea,
+        form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        form button {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: #d9534f;
+            font-size: 0.9em;
+            margin-top: 10px;
+            height: 1em;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+        
+        #add-user-form {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fdfdfd;
+        }
+
+        .active-btn {
+            background-color: #28a745;
+        }
+        .active-btn:hover {
+            background-color: #218838;
+        }
+        .inactive-btn {
+            background-color: #ffc107;
+        }
+        .inactive-btn:hover {
+            background-color: #e0a800;
+        }
+        .status-badge {
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-inactive {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-container">
+        <div class="login-box">
+            <h1>📚 Educational Resource Library</h1>
+            <h2>Please Log In to Continue</h2>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Username (admin or student)" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+                <p id="login-error" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+    
+    <div id="library-wrapper" class="hidden">
+        <header>
+            <div class="container">
+                <h1>📚 Educational Resource Library</h1>
+                <div id="auth-container">
+                    <span id="welcome-message"></span>
+                    <button id="logout-btn">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <section id="admin-panel" class="hidden">
+                <h2>Admin Dashboard</h2>
+                <button id="upload-resource-btn">Upload New Resource</button>
+                <h3>User Management</h3>
+                <form id="add-user-form">
+                    <input type="text" id="new-user-username" placeholder="New Student Username" required>
+                    <input type="password" id="new-user-password" placeholder="New Student Password" required>
+                    <button type="submit">Add New Student</button>
+                </form>
+                <div id="user-management-table"></div>
+            </section>
+
+            <section id="search-section">
+                <h2>Find Educational Materials</h2>
+                <input type="text" id="search-bar" placeholder="Search for textbooks, papers, etc...">
+            </section>
+
+            <section id="resource-library">
+                <h2>Available Resources</h2>
+                <div id="resource-grid" class="grid-container">
+                    </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="upload-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Upload a New Resource</h2>
+            <form id="upload-form">
+                <input type="text" id="resource-title" placeholder="Resource Title" required>
+                <select id="resource-type" required>
+                    <option value="" disabled selected>Select Resource Type</option>
+                    <option value="Textbook">Textbook</option>
+                    <option value="Research Paper">Research Paper</option>
+                    <option value="Study Guide">Study Guide</option>
+                    <option value="Video">Video</option>
+                </select>
+                <textarea id="resource-desc" placeholder="Brief Description" required></textarea>
+                <input type="file" id="resource-file" accept=".pdf" style="display: none;">
+                <button type="button" id="select-file-btn">Select a PDF File</button>
+                <span id="file-name">No file selected</span>
+                <input type="text" id="resource-link" placeholder="Download Link (URL)" required>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="feedback-modal-title">Provide Feedback</h2>
+            <form id="feedback-form">
+                <input type="hidden" id="feedback-resource-id">
+                <label for="feedback-rating">Rating (1-5):</label>
+                <input type="number" id="feedback-rating" min="1" max="5" required>
+                <textarea id="feedback-comment" placeholder="Your comments..." required></textarea>
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM ELEMENT REFERENCES ---
+            const loginContainer = document.getElementById('login-container');
+            const libraryWrapper = document.getElementById('library-wrapper');
+            
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            const welcomeMessage = document.getElementById('welcome-message');
+            const adminPanel = document.getElementById('admin-panel');
+            const uploadResourceBtn = document.getElementById('upload-resource-btn');
+            const userManagementTable = document.getElementById('user-management-table');
+            const addUserForm = document.getElementById('add-user-form');
+            
+            const searchBar = document.getElementById('search-bar');
+            const resourceGrid = document.getElementById('resource-grid');
+            
+            const uploadModal = document.getElementById('upload-modal');
+            const uploadForm = document.getElementById('upload-form');
+            const feedbackModal = document.getElementById('feedback-modal');
+            const feedbackForm = document.getElementById('feedback-form');
+            const feedbackModalTitle = document.getElementById('feedback-modal-title');
+            const feedbackResourceId = document.getElementById('feedback-resource-id');
+
+            const selectFileBtn = document.getElementById('select-file-btn');
+            const resourceFile = document.getElementById('resource-file');
+            const fileNameSpan = document.getElementById('file-name');
+            const resourceLinkInput = document.getElementById('resource-link');
+
+            // --- STATE MANAGEMENT ---
+            let currentUser = null; // { username, role }
+
+            // --- DATA SIMULATION ---
+            function initializeData() {
+                if (!localStorage.getItem('users')) {
+                    const initialUsers = [
+                        // Updated credentials
+                        { id: 1, username: 'admin_123', password: 'password_123', role: 'admin', isActive: true },
+                        { id: 2, username: 'student_123', password: 'student_password_123', role: 'user', isActive: true },
+                    ];
+                    localStorage.setItem('users', JSON.stringify(initialUsers));
+                }
+                if (!localStorage.getItem('resources')) {
+                    const initialResources = [
+                        { id: 1, title: 'Learn Python the Hard Way', type: 'Textbook', description: 'A classic introduction to programming with Python for beginners.', link: 'https://cdn.learnpythonthehardway.org/book/learn-python3-the-hard-way-v2.pdf', feedback: [] },
+                        { id: 2, title: 'Introduction to Algorithms', type: 'Textbook', description: 'A comprehensive guide to data structures and algorithms.', link: 'http://staff.ustc.edu.cn/~csli/graduate/algorithms/book6/Cormen_etal_Introduction_to_Algorithms_3rd_ed.pdf', feedback: [] },
+                        { id: 3, title: 'Research Methodology', type: 'Research Paper', description: 'A paper on research methodologies and data analysis techniques.', link: 'https://www.who.int/docs/default-source/documents/covid-19/technical-briefing-guidance/research-and-development/research-methodology-and-data-analysis.pdf', feedback: [] },
+                    ];
+                    localStorage.setItem('resources', JSON.stringify(initialResources));
+                }
+            }
+
+            // --- UI RENDERING FUNCTIONS ---
+            function renderResources(filter = '') {
+                const resources = JSON.parse(localStorage.getItem('resources')) || [];
+                resourceGrid.innerHTML = '';
+                
+                const filteredResources = resources.filter(res => 
+                    res.title.toLowerCase().includes(filter.toLowerCase()) ||
+                    res.description.toLowerCase().includes(filter.toLowerCase()) ||
+                    res.type.toLowerCase().includes(filter.toLowerCase())
+                );
+
+                if (filteredResources.length === 0) {
+                    resourceGrid.innerHTML = '<p>No resources found.</p>';
+                    return;
+                }
+
+                filteredResources.forEach(resource => {
+                    const card = document.createElement('div');
+                    card.className = 'resource-card';
+                    let feedbackHTML = '';
+                    if (resource.feedback && resource.feedback.length > 0) {
+                        feedbackHTML = '<div class="feedback-display">';
+                        resource.feedback.forEach(fb => {
+                            feedbackHTML += `<p><strong>${fb.username} (${fb.rating}★):</strong> "${fb.comment}"</p>`;
+                        });
+                        feedbackHTML += '</div>';
+                    }
+
+                    let downloadButtonHTML = '';
+                    if (resource.link.startsWith('data:')) {
+                        downloadButtonHTML = `<button class="download-base64-btn" data-title="${resource.title}" data-link="${resource.link}">Download</button>`;
+                    } else {
+                        downloadButtonHTML = `<a href="${resource.link}" target="_blank" download><button>Download</button></a>`;
+                    }
+
+                    card.innerHTML = `
+                        <span class="type-badge">${resource.type}</span>
+                        <h3>${resource.title}</h3>
+                        <p>${resource.description}</p>
+                        ${feedbackHTML}
+                        <div class="card-buttons">
+                            ${downloadButtonHTML}
+                            ${currentUser && currentUser.role === 'user' ? `<button class="feedback-btn" data-id="${resource.id}" data-title="${resource.title}">Feedback</button>` : ''}
+                        </div>
+                    `;
+                    resourceGrid.appendChild(card);
+                });
+
+                document.querySelectorAll('.feedback-btn').forEach(button => {
+                    button.addEventListener('click', () => openFeedbackModal(button.dataset.id, button.dataset.title));
+                });
+                
+                document.querySelectorAll('.download-base64-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const base64Data = e.target.dataset.link.split(',')[1];
+                        const title = e.target.dataset.title;
+                        const byteCharacters = atob(base64Data);
+                        const byteNumbers = new Array(byteCharacters.length);
+                        for (let i = 0; i < byteCharacters.length; i++) {
+                            byteNumbers[i] = byteCharacters.charCodeAt(i);
+                        }
+                        const byteArray = new Uint8Array(byteNumbers);
+                        const blob = new Blob([byteArray], { type: 'application/pdf' });
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = `${title}.pdf`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(link.href);
+                    });
+                });
+            }
+
+            function renderUserManagement() {
+                if (!currentUser || currentUser.role !== 'admin') return;
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                let tableHTML = `<table><thead><tr><th>Username</th><th>Role</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
+                users.forEach(user => {
+                    if (user.role !== 'admin') {
+                        const statusClass = user.isActive ? 'status-active' : 'status-inactive';
+                        const statusText = user.isActive ? 'Active' : 'Inactive';
+                        const toggleButtonClass = user.isActive ? 'inactive-btn' : 'active-btn';
+                        const toggleButtonText = user.isActive ? 'Deactivate' : 'Activate';
+
+                        tableHTML += `
+                            <tr>
+                                <td>${user.username}</td>
+                                <td>${user.role}</td>
+                                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                                <td>
+                                    <button class="toggle-status-btn ${toggleButtonClass}" data-id="${user.id}">${toggleButtonText}</button>
+                                    <button class="delete-user-btn" data-id="${user.id}">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+                tableHTML += '</tbody></table>';
+                userManagementTable.innerHTML = tableHTML;
+
+                document.querySelectorAll('.delete-user-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteUser(parseInt(e.target.dataset.id)));
+                });
+                document.querySelectorAll('.toggle-status-btn').forEach(button => {
+                    button.addEventListener('click', (e) => toggleUserStatus(parseInt(e.target.dataset.id)));
+                });
+            }
+
+            // Central function to update UI based on login state
+            function updateUI() {
+                if (currentUser) {
+                    loginContainer.classList.add('hidden');
+                    libraryWrapper.classList.remove('hidden');
+                    welcomeMessage.textContent = `Welcome, ${currentUser.username}!`;
+                    adminPanel.classList.toggle('hidden', currentUser.role !== 'admin');
+                    if (currentUser.role === 'admin') renderUserManagement();
+                    renderResources(searchBar.value);
+                } else {
+                    loginContainer.classList.remove('hidden');
+                    libraryWrapper.classList.add('hidden');
+                }
+            }
+
+            // --- AUTHENTICATION ---
+            function handleLogin(e) {
+                e.preventDefault();
+                const username = e.target.username.value;
+                const password = e.target.password.value;
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const foundUser = users.find(u => u.username === username && u.password === password);
+
+                if (foundUser) {
+                    if (foundUser.isActive) {
+                        currentUser = { username: foundUser.username, role: foundUser.role, isActive: foundUser.isActive };
+                        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        loginForm.reset();
+                        loginError.textContent = '';
+                        updateUI();
+                    } else {
+                        loginError.textContent = 'Your account has been deactivated. Please contact the administrator.';
+                    }
+                } else {
+                    loginError.textContent = 'Invalid username or password.';
+                }
+            }
+
+            function handleLogout() {
+                currentUser = null;
+                sessionStorage.removeItem('currentUser');
+                updateUI();
+            }
+
+            function checkLoginState() {
+                const user = sessionStorage.getItem('currentUser');
+                if (user) currentUser = JSON.parse(user);
+                updateUI();
+            }
+
+            // --- MODAL HANDLING ---
+            function openModal(modal) { modal.style.display = 'block'; }
+            function closeModal(modal) { modal.style.display = 'none'; }
+
+            window.onclick = (event) => {
+                if (event.target.classList.contains('modal')) closeModal(event.target);
+            }
+            document.querySelectorAll('.close-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => closeModal(e.target.closest('.modal')));
+            });
+
+            // --- ADMIN & USER ACTIONS ---
+            function handleNewUser(e) {
+                e.preventDefault();
+                const newUsername = e.target['new-user-username'].value;
+                const newPassword = e.target['new-user-password'].value;
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+
+                if (users.some(u => u.username === newUsername)) {
+                    alert('Username already exists. Please choose another.');
+                    return;
+                }
+
+                const newUser = {
+                    id: Date.now(),
+                    username: newUsername,
+                    password: newPassword,
+                    role: 'user',
+                    isActive: true
+                };
+
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                e.target.reset();
+                renderUserManagement();
+                alert(`New student "${newUsername}" added successfully!`);
+            }
+
+            function toggleUserStatus(userId) {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                const userIndex = users.findIndex(u => u.id === userId);
+                if (userIndex !== -1) {
+                    users[userIndex].isActive = !users[userIndex].isActive;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    renderUserManagement();
+                }
+            }
+
+            function handleUpload(e) {
+                e.preventDefault();
+                const resources = JSON.parse(localStorage.getItem('resources')) || [];
+                let downloadLink = '';
+                
+                if (resourceFile.files.length > 0) {
+                    const file = resourceFile.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        downloadLink = event.target.result;
+                        const newResource = {
+                            id: Date.now(),
+                            title: e.target['resource-title'].value,
+                            type: e.target['resource-type'].value,
+                            description: e.target['resource-desc'].value,
+                            link: downloadLink,
+                            feedback: []
+                        };
+                        resources.push(newResource);
+                        localStorage.setItem('resources', JSON.stringify(resources));
+                        closeModal(uploadModal);
+                        uploadForm.reset();
+                        fileNameSpan.textContent = 'No file selected';
+                        resourceLinkInput.classList.remove('hidden');
+                        renderResources();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    downloadLink = resourceLinkInput.value;
+
+                    if (!downloadLink) {
+                        alert('Please select a file or enter a download link.');
+                        return;
+                    }
+
+                    const newResource = {
+                        id: Date.now(),
+                        title: e.target['resource-title'].value,
+                        type: e.target['resource-type'].value,
+                        description: e.target['resource-desc'].value,
+                        link: downloadLink,
+                        feedback: []
+                    };
+                    resources.push(newResource);
+                    localStorage.setItem('resources', JSON.stringify(resources));
+                    closeModal(uploadModal);
+                    uploadForm.reset();
+                    fileNameSpan.textContent = 'No file selected';
+                    resourceLinkInput.classList.remove('hidden');
+                    renderResources();
+                }
+            }
+
+            function handleFeedback(e) {
+                e.preventDefault();
+                const resourceId = parseInt(feedbackResourceId.value);
+                const resources = JSON.parse(localStorage.getItem('resources')) || [];
+                const resource = resources.find(r => r.id === resourceId);
+                if (resource) {
+                    resource.feedback.push({
+                        username: currentUser.username,
+                        rating: e.target['feedback-rating'].value,
+                        comment: e.target['feedback-comment'].value,
+                    });
+                    localStorage.setItem('resources', JSON.stringify(resources));
+                    closeModal(feedbackModal);
+                    feedbackForm.reset();
+                    renderResources();
+                }
+            }
+
+            function openFeedbackModal(resourceId, resourceTitle) {
+                feedbackModalTitle.textContent = `Provide Feedback for: ${resourceTitle}`;
+                feedbackResourceId.value = resourceId;
+                openModal(feedbackModal);
+            }
+            
+            function deleteUser(userId) {
+                if (confirm('Are you sure you want to delete this user?')) {
+                    let users = JSON.parse(localStorage.getItem('users')) || [];
+                    users = users.filter(user => user.id !== userId);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    renderUserManagement();
+                }
+            }
+            
+            // --- FILE UPLOAD LOGIC ---
+            selectFileBtn.addEventListener('click', () => {
+                resourceFile.click();
+            });
+
+            resourceFile.addEventListener('change', () => {
+                if (resourceFile.files.length > 0) {
+                    fileNameSpan.textContent = `Selected: ${resourceFile.files[0].name}`;
+                    resourceLinkInput.classList.add('hidden');
+                    resourceLinkInput.removeAttribute('required');
+                    resourceLinkInput.value = '';
+                } else {
+                    fileNameSpan.textContent = 'No file selected';
+                    resourceLinkInput.classList.remove('hidden');
+                    resourceLinkInput.setAttribute('required', 'required');
+                }
+            });
+
+            // --- EVENT LISTENERS ---
+            loginForm.addEventListener('submit', handleLogin);
+            logoutBtn.addEventListener('click', handleLogout);
+            uploadResourceBtn.addEventListener('click', () => openModal(uploadModal));
+            uploadForm.addEventListener('submit', handleUpload);
+            feedbackForm.addEventListener('submit', handleFeedback);
+            addUserForm.addEventListener('submit', handleNewUser);
+            searchBar.addEventListener('keyup', (e) => renderResources(e.target.value));
+
+            // --- INITIALIZATION ---
+            initializeData();
+            checkLoginState();
+        });
+    </script>
+</body>
+</html>
